@@ -1,0 +1,42 @@
+{
+  "name": "cursor-usage-extension",
+  "version": "0.0.1",
+  "description": "Browser extension to visualize Cursor usage against ideal pacing",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --outfile=dist/content.js --format=iife --target=es2022 && npm run copy-assets",
+    "copy-assets": "cp manifest.json dist/ && cp -r icons dist/ 2>/dev/null || true",
+    "watch": "esbuild src/main.ts --bundle --outfile=dist/content.js --format=iife --target=es2022 --watch",
+    "clean": "rm -rf dist",
+    "generate-icons": "node scripts/generate-icons.js",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "package:chrome": "npm run build && cd dist && zip -r ../cursor-usage-chrome.zip .",
+    "package:firefox": "npm run build && cd dist && zip -r ../cursor-usage-firefox.zip ."
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "esbuild": "^0.27.2",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.2.0",
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.18"
+  },
+  "keywords": [
+    "cursor",
+    "usage",
+    "browser-extension"
+  ],
+  "license": "MIT"
+}
