@@ -6,10 +6,7 @@
   "permissions": [],
   "content_scripts": [
     {
-      "matches": [
-        "https://cursor.com/dashboard?*tab=usage*",
-        "https://www.cursor.com/dashboard?*tab=usage*"
-      ],
+      "matches": ["https://cursor.com/*dashboard?*tab=usage*", "https://www.cursor.com/*dashboard?*tab=usage*"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }

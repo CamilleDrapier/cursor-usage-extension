@@ -16,8 +16,8 @@ export const ANIMATION = {
 } as const
 
 export const TIMING = {
-  ELEMENT_TIMEOUT_MS: 10000,
-  POLL_INTERVAL_MS: 500,
+  ELEMENT_TIMEOUT_MS: 20000,
+  POLL_INTERVAL_MS: 100,
 } as const
 
 export const EXTENSION_MARKER = 'data-cursor-usage-tracker'
