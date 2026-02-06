@@ -1,6 +1,6 @@
 {
   "name": "cursor-usage-extension",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Browser extension to visualize Cursor usage against ideal pacing",
   "type": "module",
   "engines": {
@@ -12,8 +12,8 @@
     "watch": "esbuild src/main.ts --bundle --outfile=dist/content.js --format=iife --target=es2022 --watch",
     "clean": "rm -rf dist",
     "generate-icons": "node scripts/generate-icons.js",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write *",
     "format:check": "prettier --check *",
     "test": "vitest run",
@@ -23,13 +23,15 @@
     "package:firefox": "npm run build && cd dist && zip -r ../cursor-usage-firefox.zip ."
   },
   "devDependencies": {
-    "sharp": "^0.34.5",
+    "@types/jsdom": "^27.0.0",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.27.3",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
+    "jsdom": "^28.0.0",
     "prettier": "^3.2.0",
+    "sharp": "^0.34.5",
     "typescript": "^5.3.3",
     "vitest": "^4.0.18"
   },

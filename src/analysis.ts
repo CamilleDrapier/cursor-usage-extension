@@ -9,7 +9,7 @@ export class UsageDataValidationError extends Error {
   }
 }
 
-export function gatherUsageData(matchingElement: Element): UsageData {
+export const gatherUsageData = (matchingElement: Element): UsageData => {
   const statsContainer = matchingElement.nextElementSibling
   if (!statsContainer) throw new Error('Could not find stats container')
 
@@ -25,14 +25,14 @@ export function gatherUsageData(matchingElement: Element): UsageData {
   }
 }
 
-function validateUsageData(data: UsageData): void {
+const validateUsageData = (data: UsageData): void => {
   if (data.allowedRequests <= 0) throw new UsageDataValidationError('allowedRequests must be a positive number')
   if (data.usedRequests < 0) throw new UsageDataValidationError('usedRequests cannot be negative')
   if (data.allowanceEnd <= data.allowanceStart) throw new UsageDataValidationError('allowanceEnd must be after allowanceStart')
   if (data.currentDate < data.allowanceStart) throw new UsageDataValidationError('currentDate cannot be before allowanceStart')
 }
 
-export function analyzeUsage(data: UsageData): UsageAnalysis {
+export const analyzeUsage = (data: UsageData): UsageAnalysis => {
   validateUsageData(data)
 
   const totalDays = daysBetween(data.allowanceStart, data.allowanceEnd)

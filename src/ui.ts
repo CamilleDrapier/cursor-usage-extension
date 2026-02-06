@@ -1,8 +1,14 @@
 import type { UsageAnalysis } from './types'
-import { COLORS, ANIMATION } from './constants'
+import { COLORS, ANIMATION, FILLER_ELEMENT_ID } from './constants'
 
-export function createFillerElement(analysis: UsageAnalysis): HTMLDivElement {
-  const filler = document.createElement('div')
+export const getOrcreateFillerElement = (analysis: UsageAnalysis): HTMLDivElement => {
+  let filler = document.getElementById(FILLER_ELEMENT_ID) as HTMLDivElement
+
+  if (!filler) {
+    filler = document.createElement('div')
+    filler.id = FILLER_ELEMENT_ID
+    applyPulseAnimation(filler)
+  }
 
   filler.style.backgroundColor = analysis.isOverUsage ? COLORS.OVER_USAGE : COLORS.UNDER_USAGE
   filler.style.height = '100%'
@@ -22,7 +28,7 @@ export function createFillerElement(analysis: UsageAnalysis): HTMLDivElement {
   return filler
 }
 
-export function applyPulseAnimation(element: HTMLElement): void {
+const applyPulseAnimation = (element: HTMLElement): void => {
   element.animate([{ opacity: ANIMATION.OPACITY_MIN }, { opacity: ANIMATION.OPACITY_MAX }], {
     duration: ANIMATION.DURATION_MS,
     iterations: Infinity,
@@ -31,17 +37,13 @@ export function applyPulseAnimation(element: HTMLElement): void {
   })
 }
 
-export function updateProgressBar(percentageElement: Element, analysis: UsageAnalysis, fillerElement: HTMLDivElement): void {
+export const updateProgressBar = (percentageElement: Element, fillerElement: Element, analysis: UsageAnalysis): void => {
   const htmlElement = percentageElement as HTMLElement
   htmlElement.style.borderTopRightRadius = '0'
   htmlElement.style.borderBottomRightRadius = '0'
 
-  if (analysis.isOverUsage) {
-    htmlElement.style.width = `${analysis.idealPercentage * 100}%`
-  }
+  if (analysis.isOverUsage) htmlElement.style.width = `${analysis.idealPercentage * 100}%`
 
   const parent = percentageElement.parentElement
-  if (parent) {
-    parent.insertBefore(fillerElement, percentageElement.nextElementSibling)
-  }
+  if (parent && fillerElement && !parent.contains(fillerElement)) parent.insertBefore(fillerElement, percentageElement.nextElementSibling)
 }

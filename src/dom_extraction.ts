@@ -5,7 +5,7 @@ export interface RequestCounts {
   allowed: number
 }
 
-export function extractRequestCounts(statsContainer: Element): RequestCounts {
+export const extractRequestCounts = (statsContainer: Element): RequestCounts => {
   const usedText = statsContainer.firstElementChild?.textContent ?? '0'
   const allowedText = statsContainer.lastElementChild?.textContent ?? '0'
 
@@ -15,7 +15,7 @@ export function extractRequestCounts(statsContainer: Element): RequestCounts {
   return { used, allowed }
 }
 
-export function extractAllowanceEndDate(doc: Document = document): Date {
+export const extractAllowanceEndDate = (doc: Document = document): Date => {
   const svgElement = doc.querySelector(SELECTORS.CYCLE_END_SVG)
   if (!svgElement) throw new Error('Could not find cycle end date element')
 
@@ -28,7 +28,7 @@ export function extractAllowanceEndDate(doc: Document = document): Date {
   return date
 }
 
-export function calculateAllowanceStart(allowanceEnd: Date): Date {
+export const calculateAllowanceStart = (allowanceEnd: Date): Date => {
   const start = new Date(allowanceEnd)
   const originalDay = allowanceEnd.getDate()
 

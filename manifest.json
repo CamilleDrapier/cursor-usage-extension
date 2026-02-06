@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Cursor Usage Tracker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Visualizes your Cursor usage against ideal pacing throughout the billing cycle",
   "permissions": [],
+  "host_permissions": ["https://cursor.com/*", "https://www.cursor.com/*"],
   "content_scripts": [
     {
       "matches": ["https://cursor.com/*dashboard?*tab=usage*", "https://www.cursor.com/*dashboard?*tab=usage*"],

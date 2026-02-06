@@ -1,18 +1,24 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createFillerElement, applyPulseAnimation, updateProgressBar } from './ui'
+import { JSDOM } from 'jsdom'
+import { getOrcreateFillerElement, updateProgressBar } from './ui'
 import type { UsageAnalysis } from './types'
-import { COLORS, ANIMATION } from './constants'
 
 beforeEach(() => {
-  vi.stubGlobal('document', {
-    createElement: vi.fn(() => ({
-      style: {},
-      title: '',
-    })),
+  const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>')
+  global.document = dom.window.document
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  global.window = dom.window as any
+
+  // Mock the animate function for HTMLElements
+  Object.defineProperty(dom.window.HTMLElement.prototype, 'animate', {
+    writable: true,
+    value: vi.fn().mockReturnValue({
+      finished: Promise.resolve(),
+    }),
   })
 })
 
-describe('createFillerElement', () => {
+describe('getOrcreateFillerElement', () => {
   it('creates red element for over-usage', () => {
     const analysis: UsageAnalysis = {
       idealPercentage: 0.5,
@@ -21,8 +27,8 @@ describe('createFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = createFillerElement(analysis)
-    expect(element.style.backgroundColor).toBe(COLORS.OVER_USAGE)
+    const element = getOrcreateFillerElement(analysis)
+    expect(element.style.backgroundColor).toBe('rgb(255, 107, 107)')
     expect(element.title).toContain('ahead')
     expect(element.title).toContain('100')
   })
@@ -35,8 +41,8 @@ describe('createFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = createFillerElement(analysis)
-    expect(element.style.backgroundColor).toBe(COLORS.UNDER_USAGE)
+    const element = getOrcreateFillerElement(analysis)
+    expect(element.style.backgroundColor).toBe('rgb(127, 255, 212)')
     expect(element.title).toContain('behind')
     expect(element.title).toContain('100')
   })
@@ -49,7 +55,7 @@ describe('createFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = createFillerElement(analysis)
+    const element = getOrcreateFillerElement(analysis)
     expect(element.style.width).toBe('25%')
   })
 
@@ -61,7 +67,7 @@ describe('createFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = createFillerElement(analysis)
+    const element = getOrcreateFillerElement(analysis)
     expect(element.style.width).toBe('25%')
   })
 
@@ -73,7 +79,7 @@ describe('createFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = createFillerElement(analysis)
+    const element = getOrcreateFillerElement(analysis)
     expect(element.style.height).toBe('100%')
   })
 
@@ -85,25 +91,9 @@ describe('createFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = createFillerElement(analysis)
+    const element = getOrcreateFillerElement(analysis)
     expect(element.style.borderTopRightRadius).toBe('2px')
     expect(element.style.borderBottomRightRadius).toBe('2px')
-  })
-})
-
-describe('applyPulseAnimation', () => {
-  it('calls animate with correct parameters', () => {
-    const mockAnimate = vi.fn()
-    const mockElement = { animate: mockAnimate } as unknown as HTMLElement
-
-    applyPulseAnimation(mockElement)
-
-    expect(mockAnimate).toHaveBeenCalledWith([{ opacity: ANIMATION.OPACITY_MIN }, { opacity: ANIMATION.OPACITY_MAX }], {
-      duration: ANIMATION.DURATION_MS,
-      iterations: Infinity,
-      direction: 'alternate',
-      easing: 'ease-in-out',
-    })
   })
 })
 
@@ -113,6 +103,7 @@ describe('updateProgressBar', () => {
       style: { width: '70%' },
       parentElement: {
         insertBefore: vi.fn(),
+        contains: vi.fn().mockReturnValue(true),
       },
       nextElementSibling: null,
     } as unknown as Element
@@ -124,9 +115,7 @@ describe('updateProgressBar', () => {
       differenceRequests: 100,
     }
 
-    const mockFiller = {} as HTMLDivElement
-
-    updateProgressBar(mockPercentageElement, analysis, mockFiller)
+    updateProgressBar(mockPercentageElement, {} as HTMLDivElement, analysis)
 
     expect((mockPercentageElement as HTMLElement).style.width).toBe('50%')
   })
@@ -136,6 +125,7 @@ describe('updateProgressBar', () => {
       style: { width: '30%' },
       parentElement: {
         insertBefore: vi.fn(),
+        contains: vi.fn().mockReturnValue(true),
       },
       nextElementSibling: null,
     } as unknown as Element
@@ -147,9 +137,7 @@ describe('updateProgressBar', () => {
       differenceRequests: 100,
     }
 
-    const mockFiller = {} as HTMLDivElement
-
-    updateProgressBar(mockPercentageElement, analysis, mockFiller)
+    updateProgressBar(mockPercentageElement, {} as HTMLDivElement, analysis)
 
     expect((mockPercentageElement as HTMLElement).style.width).toBe('30%')
   })
@@ -161,6 +149,7 @@ describe('updateProgressBar', () => {
       style: { width: '30%' },
       parentElement: {
         insertBefore: insertBeforeMock,
+        contains: vi.fn().mockReturnValue(false),
       },
       nextElementSibling: nextSibling,
     } as unknown as Element
@@ -173,8 +162,9 @@ describe('updateProgressBar', () => {
     }
 
     const mockFiller = {} as HTMLDivElement
+    vi.spyOn(document, 'getElementById').mockReturnValue(mockFiller)
 
-    updateProgressBar(mockPercentageElement, analysis, mockFiller)
+    updateProgressBar(mockPercentageElement, {} as HTMLDivElement, analysis)
 
     expect(insertBeforeMock).toHaveBeenCalledWith(mockFiller, nextSibling)
   })
@@ -193,8 +183,6 @@ describe('updateProgressBar', () => {
       differenceRequests: 100,
     }
 
-    const mockFiller = {} as HTMLDivElement
-
-    expect(() => updateProgressBar(mockPercentageElement, analysis, mockFiller)).not.toThrow()
+    expect(() => updateProgressBar(mockPercentageElement, {} as HTMLDivElement, analysis)).not.toThrow()
   })
 })

@@ -1,37 +1,30 @@
-import { waitForElement } from './utility'
+import { observeAndProcessElement } from './utility'
 import { gatherUsageData, analyzeUsage } from './analysis'
-import { createFillerElement, applyPulseAnimation, updateProgressBar } from './ui'
+import { getOrcreateFillerElement, updateProgressBar } from './ui'
 import { SELECTORS, EXTENSION_MARKER } from './constants'
 
-function isAlreadyInitialized(): boolean {
+const isAlreadyInitialized = (): boolean => {
   return document.body.hasAttribute(EXTENSION_MARKER)
 }
 
-function markAsInitialized(): void {
+const markAsInitialized = (): void => {
   document.body.setAttribute(EXTENSION_MARKER, 'true')
 }
 
-async function main(): Promise<void> {
-  // Prevent duplicate initialization (e.g., if page updates without full reload)
-  if (isAlreadyInitialized()) {
-    return
-  }
+const main = async (): Promise<void> => {
+  if (isAlreadyInitialized()) return Promise.resolve()
   markAsInitialized()
 
-  const matchingElement = await waitForElement(SELECTORS.USAGE_LABEL_XPATH)
+  return observeAndProcessElement(SELECTORS.USAGE_LABEL_XPATH, (matchingElement) => {
+    const usageData = gatherUsageData(matchingElement)
+    const analysis = analyzeUsage(usageData)
 
-  const usageData = gatherUsageData(matchingElement)
-  const analysis = analyzeUsage(usageData)
+    const percentageElement = document.querySelector(SELECTORS.PROGRESS_BAR)
+    if (!percentageElement) return
 
-  const percentageElement = document.querySelector(SELECTORS.PROGRESS_BAR)
-
-  if (!percentageElement) {
-    throw new Error('Could not find percentage bar element')
-  }
-
-  const fillerElement = createFillerElement(analysis)
-  applyPulseAnimation(fillerElement)
-  updateProgressBar(percentageElement, analysis, fillerElement)
+    const fillerElement = getOrcreateFillerElement(analysis)
+    updateProgressBar(percentageElement, fillerElement, analysis)
+  })
 }
 
 main().catch((error: unknown) => {

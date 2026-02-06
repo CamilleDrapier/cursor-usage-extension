@@ -15,9 +15,5 @@ export const ANIMATION = {
   OPACITY_MAX: '1',
 } as const
 
-export const TIMING = {
-  ELEMENT_TIMEOUT_MS: 20000,
-  POLL_INTERVAL_MS: 100,
-} as const
-
 export const EXTENSION_MARKER = 'data-cursor-usage-tracker'
+export const FILLER_ELEMENT_ID = 'cursor-usage-extension-filler'

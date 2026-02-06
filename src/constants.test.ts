@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { SELECTORS, COLORS, ANIMATION, TIMING, EXTENSION_MARKER } from './constants'
+import { SELECTORS, COLORS, ANIMATION, EXTENSION_MARKER } from './constants'
 
 describe('constants', () => {
   describe('SELECTORS', () => {
@@ -39,20 +39,6 @@ describe('constants', () => {
       expect(maxOpacity).toBeGreaterThanOrEqual(0)
       expect(maxOpacity).toBeLessThanOrEqual(1)
       expect(maxOpacity).toBeGreaterThan(minOpacity)
-    })
-  })
-
-  describe('TIMING', () => {
-    it('has positive timeout', () => {
-      expect(TIMING.ELEMENT_TIMEOUT_MS).toBeGreaterThan(0)
-    })
-
-    it('has positive poll interval', () => {
-      expect(TIMING.POLL_INTERVAL_MS).toBeGreaterThan(0)
-    })
-
-    it('poll interval is less than timeout', () => {
-      expect(TIMING.POLL_INTERVAL_MS).toBeLessThan(TIMING.ELEMENT_TIMEOUT_MS)
     })
   })
 
