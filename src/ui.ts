@@ -1,7 +1,7 @@
 import type { UsageAnalysis } from './types'
 import { COLORS, ANIMATION, FILLER_ELEMENT_ID } from './constants'
 
-export const getOrcreateFillerElement = (analysis: UsageAnalysis): HTMLDivElement => {
+export const getOrCreateFillerElement = (analysis: UsageAnalysis): HTMLDivElement => {
   let filler = document.getElementById(FILLER_ELEMENT_ID) as HTMLDivElement
 
   if (!filler) {

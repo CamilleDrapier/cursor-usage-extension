@@ -50,4 +50,10 @@ describe('daysBetween', () => {
     const date2 = new Date('2023-03-01')
     expect(daysBetween(date1, date2)).toBe(1)
   })
+
+  it('ignores time-of-day when calculating days between', () => {
+    const date1 = new Date(Date.UTC(2024, 0, 1, 23, 59, 59))
+    const date2 = new Date(Date.UTC(2024, 0, 2, 0, 0, 1))
+    expect(daysBetween(date1, date2)).toBe(1)
+  })
 })

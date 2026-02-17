@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { extractRequestCounts, calculateAllowanceStart } from './dom_extraction'
+import { extractRequestCounts, calculateAllowanceStart, extractAllowanceEndDate } from './dom_extraction'
 
 describe('extractRequestCounts', () => {
   it('extracts used and allowed counts from element', () => {
@@ -37,7 +37,7 @@ describe('extractRequestCounts', () => {
 
   it('strips non-numeric characters from allowed count', () => {
     const mockElement = {
-      firstElementChild: { textContent: '100' },
+      firstElementChild: { textContent: '100 consumed' },
       lastElementChild: { textContent: 'of 1,000 requests' },
     } as unknown as Element
 
@@ -54,6 +54,35 @@ describe('extractRequestCounts', () => {
     const result = extractRequestCounts(mockElement)
     expect(result.used).toBe(0)
     expect(result.allowed).toBe(0)
+  })
+})
+
+describe('extractAllowanceEndDate', () => {
+  it('parses ISO-like date embedded in tooltip text', () => {
+    const svgElement = {
+      getAttribute: (name: string) => (name === 'data-tooltip-content' ? 'Sat, 16 Mar 2024 04:42:17 UTC' : null),
+    } as unknown as Element
+
+    const mockDoc = {
+      querySelector: () => svgElement,
+    } as unknown as Document
+
+    const result = extractAllowanceEndDate(mockDoc)
+    expect(result.getUTCFullYear()).toBe(2024)
+    expect(result.getUTCMonth()).toBe(2)
+    expect(result.getUTCDate()).toBe(16)
+  })
+
+  it('throws when tooltip does not contain a date', () => {
+    const svgElement = {
+      getAttribute: () => 'some day',
+    } as unknown as Element
+
+    const mockDoc = {
+      querySelector: () => svgElement,
+    } as unknown as Document
+
+    expect(() => extractAllowanceEndDate(mockDoc)).toThrow('Invalid date format in tooltip: some day')
   })
 })
 

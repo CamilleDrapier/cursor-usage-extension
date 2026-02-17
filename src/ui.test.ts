@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { JSDOM } from 'jsdom'
-import { getOrcreateFillerElement, updateProgressBar } from './ui'
+import { getOrCreateFillerElement, updateProgressBar } from './ui'
 import type { UsageAnalysis } from './types'
 
 beforeEach(() => {
@@ -18,7 +18,7 @@ beforeEach(() => {
   })
 })
 
-describe('getOrcreateFillerElement', () => {
+describe('getOrCreateFillerElement', () => {
   it('creates red element for over-usage', () => {
     const analysis: UsageAnalysis = {
       idealPercentage: 0.5,
@@ -27,7 +27,7 @@ describe('getOrcreateFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = getOrcreateFillerElement(analysis)
+    const element = getOrCreateFillerElement(analysis)
     expect(element.style.backgroundColor).toBe('rgb(255, 107, 107)')
     expect(element.title).toContain('ahead')
     expect(element.title).toContain('100')
@@ -41,7 +41,7 @@ describe('getOrcreateFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = getOrcreateFillerElement(analysis)
+    const element = getOrCreateFillerElement(analysis)
     expect(element.style.backgroundColor).toBe('rgb(127, 255, 212)')
     expect(element.title).toContain('behind')
     expect(element.title).toContain('100')
@@ -55,7 +55,7 @@ describe('getOrcreateFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = getOrcreateFillerElement(analysis)
+    const element = getOrCreateFillerElement(analysis)
     expect(element.style.width).toBe('25%')
   })
 
@@ -67,7 +67,7 @@ describe('getOrcreateFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = getOrcreateFillerElement(analysis)
+    const element = getOrCreateFillerElement(analysis)
     expect(element.style.width).toBe('25%')
   })
 
@@ -79,7 +79,7 @@ describe('getOrcreateFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = getOrcreateFillerElement(analysis)
+    const element = getOrCreateFillerElement(analysis)
     expect(element.style.height).toBe('100%')
   })
 
@@ -91,7 +91,7 @@ describe('getOrcreateFillerElement', () => {
       differenceRequests: 100,
     }
 
-    const element = getOrcreateFillerElement(analysis)
+    const element = getOrCreateFillerElement(analysis)
     expect(element.style.borderTopRightRadius).toBe('2px')
     expect(element.style.borderBottomRightRadius).toBe('2px')
   })

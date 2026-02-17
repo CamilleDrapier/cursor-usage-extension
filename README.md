@@ -28,7 +28,7 @@ cursor-usage-extension/
 │   ├── analysis.ts        # Usage calculation logic
 │   ├── ui.ts              # UI manipulation functions
 │   ├── main.ts            # Entry point
-│   └── *.test.ts          # Unit tests (53 tests)
+│   └── *.test.ts          # Unit tests
 ├── icons/
 │   ├── icon.svg           # Source icon
 │   ├── icon-16.png        # Generated icon
@@ -75,6 +75,8 @@ Watch for changes and automatically rebuild:
 ```bash
 npm run watch
 ```
+
+This starts a long-lived content script bundle that relies on a `MutationObserver` to track updates to the Cursor dashboard. **The observer is intentionally never disconnected** so that the extension continues to react to DOM changes on the single-page application without needing a full reload.
 
 ### Linting
 
