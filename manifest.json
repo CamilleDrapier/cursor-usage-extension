@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Cursor Usage Tracker",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Visualizes your Cursor usage against ideal pacing throughout the billing cycle",
   "permissions": [],
   "host_permissions": ["https://cursor.com/*", "https://www.cursor.com/*"],

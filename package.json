@@ -1,6 +1,6 @@
 {
   "name": "cursor-usage-extension",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Browser extension to visualize Cursor usage against ideal pacing",
   "type": "module",
   "engines": {
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/jsdom": "^27.0.0",
+    "@types/jsdom": "^28.0.0",
     "esbuild": "^0.27.3",
     "eslint": "^10.0.0",
     "jsdom": "^28.1.0",

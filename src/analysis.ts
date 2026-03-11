@@ -1,5 +1,4 @@
 import type { UsageData, UsageAnalysis } from './types'
-import { daysBetween } from './utility'
 import { extractRequestCounts, extractAllowanceEndDate, calculateAllowanceStart } from './dom_extraction'
 
 export class UsageDataValidationError extends Error {
@@ -35,10 +34,10 @@ const validateUsageData = (data: UsageData): void => {
 export const analyzeUsage = (data: UsageData): UsageAnalysis => {
   validateUsageData(data)
 
-  const totalDays = daysBetween(data.allowanceStart, data.allowanceEnd)
-  const elapsedDays = daysBetween(data.allowanceStart, data.currentDate)
+  const totalTime = data.allowanceEnd.getTime() - data.allowanceStart.getTime()
+  const elapsedTime = data.currentDate.getTime() - data.allowanceStart.getTime()
 
-  const idealPercentage = totalDays > 0 ? elapsedDays / totalDays : 0
+  const idealPercentage = totalTime > 0 ? elapsedTime / totalTime : 0
   const currentPercentage = data.usedRequests / data.allowedRequests
   const isOverUsage = currentPercentage > idealPercentage
   const differenceRequests = Math.round(Math.abs(currentPercentage - idealPercentage) * data.allowedRequests)
